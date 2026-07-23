@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CreneauController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -15,10 +16,14 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::middleware('role:medecin')->group(function () {
-        // routes reservees au medecin, a completer plus tard
+        Route::post('/creneaux', [CreneauController::class, 'store']);
+        Route::get('/mes-creneaux', [CreneauController::class, 'mesCreneaux']);
+        Route::delete('/creneaux/{creneau}', [CreneauController::class, 'destroy']);
     });
 
     Route::middleware('role:patient')->group(function () {
         // routes reservees au patient, a completer plus tard
     });
 });
+
+Route::get('/medecins/{medecinProfileId}/creneaux-disponibles', [CreneauController::class, 'creneauxDisponibles']);

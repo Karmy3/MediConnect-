@@ -17,6 +17,8 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:patient,medecin',
+            'specialite' => 'required_if:role,medecin|string|max:255',
+            'tarif_consultation' => 'required_if:role,medecin|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -30,10 +32,17 @@ class AuthController extends Controller
             'role' => $request->role,
         ]);
 
+        if ($request->role === 'medecin') {
+            $user->medecinProfile()->create([
+                'specialite' => $request->specialite,
+                'tarif_consultation' => $request->tarif_consultation,
+            ]);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
+            'user' => $user->load('medecinProfile'),
             'token' => $token,
         ], 201);
     }
