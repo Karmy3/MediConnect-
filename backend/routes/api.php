@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CreneauController;
+use App\Http\Controllers\Api\RendezVousController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -19,11 +20,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/creneaux', [CreneauController::class, 'store']);
         Route::get('/mes-creneaux', [CreneauController::class, 'mesCreneaux']);
         Route::delete('/creneaux/{creneau}', [CreneauController::class, 'destroy']);
+        Route::get('/rendez-vous-medecin', [RendezVousController::class, 'rendezVousMedecin']);
+        Route::patch('/rendez-vous/{rendezVous}/confirmer', [RendezVousController::class, 'confirmer']);
     });
 
     Route::middleware('role:patient')->group(function () {
-        // routes reservees au patient, a completer plus tard
+        Route::post('/rendez-vous', [RendezVousController::class, 'store']);
+        Route::get('/mes-rendez-vous', [RendezVousController::class, 'mesRendezVous']);
     });
 });
 
 Route::get('/medecins/{medecinProfileId}/creneaux-disponibles', [CreneauController::class, 'creneauxDisponibles']);
+Route::patch('/rendez-vous/{rendezVous}/annuler', [RendezVousController::class, 'annuler']);
