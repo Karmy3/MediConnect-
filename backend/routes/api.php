@@ -32,3 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/medecins/{medecinProfileId}/creneaux-disponibles', [CreneauController::class, 'creneauxDisponibles']);
 Route::patch('/rendez-vous/{rendezVous}/annuler', [RendezVousController::class, 'annuler']);
+
+Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
